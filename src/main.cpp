@@ -17,8 +17,10 @@ void setup() {
   dump_eeprom();
   dump_fs();
 #endif
+
+  init_web();
+
+  init_time();
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-}
+void loop() { handle_web(); }

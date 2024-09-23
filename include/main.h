@@ -6,12 +6,21 @@
 
 #include <Arduino.h>
 #include <CRC32.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+#include <ESPAsyncHTTPUpdateServer.h>
+#include <ESPAsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <ESPAsyncWiFiManager.h>
 #include <ESP_EEPROM.h>
 #include <LittleFS.h>
 
+#include "datetime.h"
 #include "dump.h"
 #include "eeprom.h"
+#include "html.h"
 #include "version.h"
+#include "web.h"
 
 #define DEFAULT_DEVICE_NAME "RF_CC1101"
 

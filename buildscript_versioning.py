@@ -3,7 +3,7 @@ import subprocess
 
 FILENAME_BUILDNO = "versioning"
 FILENAME_VERSION_H = "include/version.h"
-version = "v0.4."
+version = "v0.0."
 
 
 build_no = 0

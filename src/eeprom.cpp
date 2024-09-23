@@ -29,7 +29,7 @@ void save_eeprom() {
   EEPROM.commit();
 }
 
-void __default_eeprom() {
+void default_eeprom() {
   eeprom = {};
   eeprom.sign = EEPROM_SIGNATURE;
   strcpy(eeprom.device_name, DEFAULT_DEVICE_NAME);
@@ -60,6 +60,6 @@ void init_eeprom() {
   // if there's valid eeprom config, load it
   EEPROM.get(0, eeprom);
   if (!__verify_eeprom()) {
-    __default_eeprom();
+    default_eeprom();
   }
 }

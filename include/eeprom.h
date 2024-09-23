@@ -13,5 +13,6 @@ struct eeprom_data {
   char mqtt_server_password[64];
 };
 
+void default_eeprom();
 void save_eeprom();
 void init_eeprom();
