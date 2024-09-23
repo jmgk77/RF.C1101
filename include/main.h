@@ -6,6 +6,7 @@
 
 #include <Arduino.h>
 #include <CRC32.h>
+#include <ESP8266LLMNR.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 #include <ESPAsyncHTTPUpdateServer.h>
