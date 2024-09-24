@@ -102,7 +102,7 @@ void __handle_404(AsyncWebServerRequest* request) {
   request->send(404, "text/plain", "Not found");
 }
 
-String __humanReadableSize(const size_t bytes) {
+String __b_kb_mb_gb(const size_t bytes) {
   if (bytes < 1024)
     return String(bytes) + " B";
   else if (bytes < (1024 * 1024))
@@ -147,7 +147,7 @@ void __handle_files(AsyncWebServerRequest* request) {
         s += "<a download='" + dir.fileName() +
              "' href='files?n=" + dir.fileName() + "'>" + dir.fileName() +
              "</a>";
-        s += "    (" + __humanReadableSize(dir.fileSize()) + ")    ";
+        s += "    (" + __b_kb_mb_gb(dir.fileSize()) + ")    ";
         const time_t t = dir.fileTime();
         s += String(ctime(&t));
         s += "<a href='files?x=" + dir.fileName() + "'>x</a><br>";
@@ -209,10 +209,10 @@ void init_web() {
   server.on("/", HTTP_ANY, __handle_root);
   server.on("/config", HTTP_ANY, __handle_config);
   server.on("/info", HTTP_ANY, __handle_info);
-  server.on("/files", HTTP_ANY, __handle_files);
   server.on("/reboot", HTTP_ANY, __handle_reboot);
   server.on("/reset", HTTP_ANY, __handle_reset);
 
+  server.on("/files", HTTP_ANY, __handle_files);
   server.on(
       "/upload", HTTP_POST,
       [](AsyncWebServerRequest* request) { request->send(200); },
@@ -225,7 +225,10 @@ void init_web() {
   MDNS.begin(eeprom.device_name);
   MDNS.addService("http", "tcp", 80);
 
+#ifdef ENABLE_EXTRA_DISCOVERY
   LLMNR.begin(eeprom.device_name);
+  NBNS.begin(eeprom.device_name);
+#endif
 }
 
 void handle_web() { MDNS.update(); }
