@@ -23,6 +23,7 @@
 #include "dump.h"
 #include "eeprom.h"
 #include "html.h"
+#include "persistence.h"
 #include "rf433.h"
 #include "version.h"
 #include "web.h"
@@ -32,6 +33,6 @@
 #define RF433_RX_PIN 4  // D2
 #define RF433_TX_PIN 5  // D1
 
-#define DEBUG
+// #define DEBUG
 // #define ENABLE_EXTRA_DISCOVERY
 // #define ENABLE_BOGUS_CODES

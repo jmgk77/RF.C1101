@@ -17,13 +17,21 @@ void setup() {
   dump_fs();
 #endif
 
+  load_rf_codes();
+
   init_web();
 
   init_time();
 
   init_433();
+
+  //***
 }
 
 RF_CODE code;
 
-void loop() { handle_web(); }
+void loop() {
+  handle_web();
+
+  //***
+}
