@@ -6,6 +6,7 @@
 
 #include <Arduino.h>
 #include <CRC32.h>
+#include <ELECHOUSE_CC1101_SRC_DRV.h>
 #include <ESP8266LLMNR.h>
 #include <ESP8266NetBIOS.h>
 #include <ESP8266WiFi.h>
@@ -16,15 +17,21 @@
 #include <ESPAsyncWiFiManager.h>
 #include <ESP_EEPROM.h>
 #include <LittleFS.h>
+#include <RCSwitch.h>
 
 #include "datetime.h"
 #include "dump.h"
 #include "eeprom.h"
 #include "html.h"
+#include "rf433.h"
 #include "version.h"
 #include "web.h"
 
 #define DEFAULT_DEVICE_NAME "RF_CC1101"
 
+#define RF433_RX_PIN 4  // D2
+#define RF433_TX_PIN 5  // D1
+
 #define DEBUG
-#define ENABLE_EXTRA_DISCOVERY
+// #define ENABLE_EXTRA_DISCOVERY
+// #define ENABLE_BOGUS_CODES

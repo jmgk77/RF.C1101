@@ -2,6 +2,8 @@
 
 extern struct eeprom_data eeprom;
 
+extern std::vector<RF_CODE> rf433_codes;
+
 const char ESP_INFO[] PROGMEM =
     "ESP8266\n"
     "ESP.getFreeHeap(): %d\n"
@@ -88,4 +90,13 @@ String html_dump_eeprom() {
   String s = __dump_eeprom();
   s.replace("\n", "<br>");
   return s;
+}
+
+void dump_rf_codes() {
+  Serial.println("RF_CODES");
+  for (auto& i : rf433_codes) {
+    Serial.printf("# %s [%ld], %d, %d, %d\n", i.rf433_name.c_str(),
+                  i.rf433_code, i.rf433_length, i.rf433_protocol,
+                  i.rf433_delay);
+  }
 }
