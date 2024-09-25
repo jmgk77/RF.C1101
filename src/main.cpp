@@ -32,10 +32,10 @@ void setup() {
   //***
 }
 
-RF_CODE code;
-
 void loop() {
   handle_web();
+
+  handle_codes_manager();
 
   //***
 }
