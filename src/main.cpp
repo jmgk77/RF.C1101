@@ -25,6 +25,8 @@ void setup() {
 
   init_433();
 
+  init_led();
+
   //***
 }
 
