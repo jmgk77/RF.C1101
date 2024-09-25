@@ -13,16 +13,17 @@ String __add_buttons() { return String(html_buttons); }
 void __handle_root(AsyncWebServerRequest* request) {
   String s;
   //
-  s += "IP: <i>" + WiFi.localIP().toString() + "</i><br>";
-  s += "Data de ínicio: <i>" + String(boot_time) + "</i><br>";
+  s += "IP: <i>" + WiFi.localIP().toString() + "</i><br>\n";
+  s += "Data de ínicio: <i>" + String(boot_time) + "</i><br>\n";
   // version
   s += "Versão: " + String(VERSION) +
 #ifdef DEBUG
        "<FONT color=red><b> DEBUG</b></FONT>" +
 #endif
-       "<br><br>";
+       "<br><br>\n";
 
   //***
+  s += gen_html_codes();
 
   // buttons
   s += __add_buttons();
@@ -69,7 +70,8 @@ void __handle_config(AsyncWebServerRequest* request) {
     FORM_END("SALVAR")
     // update
     s +=
-        "<br><form action='/update?name=firmware'enctype=multipart/form-data "
+        "<br>\n<form action='/update?name=firmware' "
+        "enctype=multipart/form-data "
         "method=POST>Firmware:<br><input type=file accept=.bin,.bin.gz "
         "name=firmware> <input type=submit value='Update Firmware'></form><br>";
 
@@ -135,8 +137,8 @@ void __handle_files(AsyncWebServerRequest* request) {
     Serial.println("Dir:\n");
 #endif
     String s;
-    s += "<div style='border: 1px solid black'><div style='border: 1px solid "
-         "black'>";
+    s += "<div style='border: 1px solid black'>\n<div style='border: 1px solid "
+         "black'>\n";
     // scan files
     Dir dir = LittleFS.openDir("");
     while (dir.next()) {
@@ -150,13 +152,13 @@ void __handle_files(AsyncWebServerRequest* request) {
         s += "    (" + __b_kb_mb_gb(dir.fileSize()) + ")    ";
         const time_t t = dir.fileTime();
         s += String(ctime(&t));
-        s += "<a href='files?x=" + dir.fileName() + "'>x</a><br>";
+        s += "<a href='files?x=" + dir.fileName() + "'>x</a><br>\n";
       }
     }
     // upload form
-    s += "</div><form action='/upload' method='POST' "
+    s += "</div>\n<form action='/upload' method='POST' "
          "enctype='multipart/form-data'><input type='file' name='name'><input "
-         "class='button' type='submit' value='UPLOAD'></form></div><br>";
+         "class='button' type='submit' value='UPLOAD'></form>\n</div><br>";
     // buttons
     s += __add_buttons();
     // send dir page

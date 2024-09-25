@@ -21,6 +21,8 @@ void setup() {
 
   init_web();
 
+  init_codes_manager();
+
   init_time();
 
   init_433();

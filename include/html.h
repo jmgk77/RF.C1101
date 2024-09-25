@@ -17,23 +17,23 @@
           : false;
 
 #define FORM_START(URL) \
-  s += "<form action='" + String(URL) + "' method='POST'>";
+  s += "<form action='" + String(URL) + "' method='POST'>\n";
 #define FORM_ASK_VALUE(VAR, TXT)                                           \
   s += "<label for='" + String(#VAR) + "' name='" + String(#VAR) + "'>" +  \
        String(TXT) + ":</label><input type='text' name='" + String(#VAR) + \
-       "' value='" + eeprom.VAR + "'><br>";
+       "' value='" + eeprom.VAR + "'><br>\n";
 #define FORM_ASK_BOOL(VAR, TXT)                                                \
   s += "<label for='" + String(#VAR) + "' name='" + String(#VAR) + "'>" +      \
        String(TXT) + ":</label><input type='checkbox' name='" + String(#VAR) + \
-       "' " + String(eeprom.VAR ? "checked" : "") + "><br>";
+       "' " + String(eeprom.VAR ? "checked" : "") + "><br>\n";
 #define FORM_ASK_BOOL_JS(VAR, TXT, JS)                                         \
   s += "<label for='" + String(#VAR) + "' name='" + String(#VAR) + "'>" +      \
        String(TXT) + ":</label><input type='checkbox' name='" + String(#VAR) + \
-       "' " + String(eeprom.VAR ? "checked " : "") + String(JS) + "><br>";
+       "' " + String(eeprom.VAR ? "checked " : "") + String(JS) + "><br>\n";
 #define FORM_END(BTN)                                                          \
   s +=                                                                         \
       "<input type='hidden' name='s' value='1'><input type='submit' value='" + \
-      String(BTN) + "'></form>";
+      String(BTN) + "'></form>\n";
 
 const char html_header[] = R""""(
 <!DOCTYPE html>
@@ -45,7 +45,8 @@ const char html_header[] = R""""(
 <meta http-equiv='refresh' content='600'/>
 <title>RF_CC1101</title>
 </head>
-<body>)"""";
+<body>
+)"""";
 
 const char html_footer[] = R""""(
 </body>

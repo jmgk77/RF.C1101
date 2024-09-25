@@ -20,6 +20,7 @@
 #include <RCSwitch.h>
 #include <Ticker.h>
 
+#include "codeman.h"
 #include "datetime.h"
 #include "dump.h"
 #include "eeprom.h"
@@ -37,4 +38,4 @@
 
 #define DEBUG
 // #define ENABLE_EXTRA_DISCOVERY
-// #define ENABLE_BOGUS_CODES
+#define ENABLE_BOGUS_CODES
