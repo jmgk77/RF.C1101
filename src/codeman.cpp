@@ -37,13 +37,24 @@ String gen_html_codes() {
 }
 
 void __handle_send(AsyncWebServerRequest* request) {
-  //***
-  request->send(200, "text/plain", "send");
+  if (request->hasParam("b")) {
+    int button = request->getParam("b")->value().toInt();
+    auto i = rf433_codes.begin() + button;
+    send_433_enable();
+    send_433(*i);
+  }
+  request->send(200, "text/html",
+                "<meta http-equiv='refresh' content='0; url=/'/>");
 }
 
 void __handle_delete(AsyncWebServerRequest* request) {
-  //***
-  request->send(200, "text/plain", "delete");
+  if (request->hasParam("b")) {
+    int button = request->getParam("b")->value().toInt();
+    rf433_codes.erase(rf433_codes.begin() + button);
+    save_rf_codes();
+  }
+  request->send(200, "text/html",
+                "<meta http-equiv='refresh' content='0; url=/'/>");
 }
 
 void __handle_edit(AsyncWebServerRequest* request) {
