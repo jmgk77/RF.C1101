@@ -47,11 +47,11 @@ void __handle_config(AsyncWebServerRequest* request) {
   //
   if (request->hasParam("s", true)) {
     // read options
-    FORM_SAVE_STRING(device_name)
-    FORM_SAVE_STRING(mqtt_server_ip)
-    FORM_SAVE_INT(mqtt_server_port)
-    FORM_SAVE_STRING(mqtt_server_username)
-    FORM_SAVE_STRING(mqtt_server_password)
+    FORM_SAVE_STRING(eeprom.device_name)
+    FORM_SAVE_STRING(eeprom.mqtt_server_ip)
+    FORM_SAVE_INT(eeprom.mqtt_server_port)
+    FORM_SAVE_STRING(eeprom.mqtt_server_username)
+    FORM_SAVE_STRING(eeprom.mqtt_server_password)
     // save data to eeprom
     save_eeprom();
     dump_eeprom();
@@ -60,12 +60,12 @@ void __handle_config(AsyncWebServerRequest* request) {
   } else {
     String s;
     FORM_START("/config")
-    FORM_ASK_VALUE(device_name, "Device name")
-    FORM_ASK_VALUE(mqtt_server_ip, "MQTT Broker fixed IP")
-    FORM_ASK_VALUE(mqtt_server_port, "MQTT Broker Port")
+    FORM_ASK_VALUE(eeprom.device_name, "Device name")
+    FORM_ASK_VALUE(eeprom.mqtt_server_ip, "MQTT Broker fixed IP")
+    FORM_ASK_VALUE(eeprom.mqtt_server_port, "MQTT Broker Port")
 
-    FORM_ASK_VALUE(mqtt_server_username, "MQTT remote username")
-    FORM_ASK_VALUE(mqtt_server_password, "MQTT remote password")
+    FORM_ASK_VALUE(eeprom.mqtt_server_username, "MQTT remote username")
+    FORM_ASK_VALUE(eeprom.mqtt_server_password, "MQTT remote password")
 
     FORM_END("SALVAR")
     // update

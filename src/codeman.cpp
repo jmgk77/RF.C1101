@@ -39,9 +39,8 @@ String gen_html_codes() {
 void __handle_send(AsyncWebServerRequest* request) {
   if (request->hasParam("b")) {
     int button = request->getParam("b")->value().toInt();
-    auto i = rf433_codes.begin() + button;
     send_433_enable();
-    send_433(*i);
+    send_433(*(rf433_codes.begin() + button));
   }
   request->send(200, "text/html",
                 "<meta http-equiv='refresh' content='0; url=/'/>");
@@ -58,18 +57,93 @@ void __handle_delete(AsyncWebServerRequest* request) {
 }
 
 void __handle_edit(AsyncWebServerRequest* request) {
-  //***
-  request->send(200, "text/plain", "edit");
+  int button;
+  if (request->hasParam("b")) {
+    // get
+    button = request->getParam("b")->value().toInt();
+  } else if (request->hasParam("b", true)) {
+    // post
+    button = request->getParam("b", true)->value().toInt();
+  } else {
+    request->send(200, "text/html",
+                  "<meta http-equiv='refresh' content='0; url=/'/>");
+  }
+
+  if (request->hasParam("s", true)) {
+    // read code
+    FORM_SAVE_STRING2(code.rf433_name);
+    FORM_SAVE_INT(code.rf433_code);
+    FORM_SAVE_INT(code.rf433_protocol);
+    FORM_SAVE_INT(code.rf433_length);
+    FORM_SAVE_INT(code.rf433_delay);
+
+    // save edit to codes list
+    *(rf433_codes.begin() + button) = code;
+    save_rf_codes();
+
+    request->send(200, "text/html",
+                  "<meta http-equiv='refresh' content='0; url=/'/>");
+  } else {
+    // edit code form
+    String s;
+    code = *(rf433_codes.begin() + button);
+
+    FORM_START("/edit")
+    FORM_ASK_VALUE(code.rf433_name, "Name");
+    FORM_ASK_VALUE(code.rf433_code, "Code");
+    FORM_ASK_VALUE(code.rf433_protocol, "Protocol");
+    FORM_ASK_VALUE(code.rf433_length, "length");
+    FORM_ASK_VALUE(code.rf433_delay, "Delay");
+    // pass button reference
+    s += "<input type='hidden' name='b' value=" + String(button) + "/>\n";
+    FORM_END("SALVAR")
+
+    // send edit page
+    request->send(200, "text/html", html_header + s + html_footer);
+  }
 }
 
 void __handle_add(AsyncWebServerRequest* request) {
-  //***
-  request->send(200, "text/plain", "add");
+  if (request->hasParam("s", true)) {
+    // read code
+    FORM_SAVE_STRING2(code.rf433_name);
+    FORM_SAVE_INT(code.rf433_code);
+    FORM_SAVE_INT(code.rf433_protocol);
+    FORM_SAVE_INT(code.rf433_length);
+    FORM_SAVE_INT(code.rf433_delay);
+    // save data to codes list
+    add_433(code);
+    save_rf_codes();
+
+    request->send(200, "text/html",
+                  "<meta http-equiv='refresh' content='0; url=/'/>");
+  } else {
+    // add code form
+    String s;
+    code = {};
+    FORM_START("/add")
+    FORM_ASK_VALUE(code.rf433_name, "Name");
+    FORM_ASK_VALUE(code.rf433_code, "Code");
+    FORM_ASK_VALUE(code.rf433_protocol, "Protocol");
+    FORM_ASK_VALUE(code.rf433_length, "length");
+    FORM_ASK_VALUE(code.rf433_delay, "Delay");
+    FORM_END("SALVAR")
+
+    // send add page
+    request->send(200, "text/html", html_header + s + html_footer);
+  }
 }
 
 void __clone_off() {
   decoding_onoff = false;
   set_led_pattern(LED_OFF);
+}
+
+void __clone_on() {
+  code = {};
+  recv_433_enable();
+  decoding_onoff = true;
+  set_led_pattern(LED_BLINK_FAST);
 }
 
 void __handle_clone(AsyncWebServerRequest* request) {
@@ -83,11 +157,7 @@ void __handle_clone(AsyncWebServerRequest* request) {
     request->send(200, "text/html",
                   "<meta http-equiv='refresh' content='0; url=/'/>");
   } else {
-    // __clone_on()
-    code = {};
-    recv_433_enable();
-    decoding_onoff = true;
-    set_led_pattern(LED_BLINK_FAST);
+    __clone_on();
 
     request->send(
         200, "text/html",
@@ -117,6 +187,10 @@ void init_codes_manager() {
   server.on("/clone_status", HTTP_ANY, __handle_clone_status);
   server.on("/clone_timeout", HTTP_ANY, __handle_clone_timeout);
   decoding_onoff = false;
+
+#ifdef DEBUG
+  dump_rf_codes();
+#endif
 }
 
 void handle_codes_manager() {

@@ -1,35 +1,37 @@
 #pragma once
 
 #define FORM_SAVE_STRING(VAR)                                  \
-  strncpy(eeprom.VAR,                                          \
+  strncpy(VAR,                                                 \
           request->hasParam(#VAR, true)                        \
               ? request->getParam(#VAR, true)->value().c_str() \
               : "",                                            \
-          sizeof(eeprom.VAR));
-#define FORM_SAVE_INT(VAR)                                          \
-  eeprom.VAR = request->hasParam(#VAR, true)                        \
-                   ? request->getParam(#VAR, true)->value().toInt() \
-                   : 0;
-#define FORM_SAVE_BOOL(VAR)                                                 \
-  eeprom.VAR =                                                              \
-      request->hasParam(#VAR, true)                                         \
-          ? (request->getParam(#VAR, true)->value() == "on" ? true : false) \
-          : false;
+          sizeof(VAR));
+#define FORM_SAVE_STRING2(VAR)                                                 \
+  VAR = request->hasParam(#VAR, true) ? request->getParam(#VAR, true)->value() \
+                                      : "";
+#define FORM_SAVE_INT(VAR)                                   \
+  VAR = request->hasParam(#VAR, true)                        \
+            ? request->getParam(#VAR, true)->value().toInt() \
+            : 0;
+#define FORM_SAVE_BOOL(VAR)                                                   \
+  VAR = request->hasParam(#VAR, true)                                         \
+            ? (request->getParam(#VAR, true)->value() == "on" ? true : false) \
+            : false;
 
 #define FORM_START(URL) \
   s += "<form action='" + String(URL) + "' method='POST'>\n";
 #define FORM_ASK_VALUE(VAR, TXT)                                           \
   s += "<label for='" + String(#VAR) + "' name='" + String(#VAR) + "'>" +  \
        String(TXT) + ":</label><input type='text' name='" + String(#VAR) + \
-       "' value='" + eeprom.VAR + "'><br>\n";
+       "' value='" + VAR + "'><br>\n";
 #define FORM_ASK_BOOL(VAR, TXT)                                                \
   s += "<label for='" + String(#VAR) + "' name='" + String(#VAR) + "'>" +      \
        String(TXT) + ":</label><input type='checkbox' name='" + String(#VAR) + \
-       "' " + String(eeprom.VAR ? "checked" : "") + "><br>\n";
+       "' " + String(VAR ? "checked" : "") + "><br>\n";
 #define FORM_ASK_BOOL_JS(VAR, TXT, JS)                                         \
   s += "<label for='" + String(#VAR) + "' name='" + String(#VAR) + "'>" +      \
        String(TXT) + ":</label><input type='checkbox' name='" + String(#VAR) + \
-       "' " + String(eeprom.VAR ? "checked " : "") + String(JS) + "><br>\n";
+       "' " + String(VAR ? "checked " : "") + String(JS) + "><br>\n";
 #define FORM_END(BTN)                                                          \
   s +=                                                                         \
       "<input type='hidden' name='s' value='1'><input type='submit' value='" + \
