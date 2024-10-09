@@ -17,9 +17,9 @@ void setup() {
   dump_fs();
 #endif
 
-  load_rf_codes();
-
   init_web();
+
+  load_rf_codes();
 
   init_codes_manager();
 

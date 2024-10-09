@@ -75,6 +75,7 @@ Pressione um botão no controle remoto
 <img id='b' src='data:image/svg+xml,<svg version="1.1" baseProfile="full" width="16" height="16" xmlns="http://www.w3.org/2000/svg"> <circle cx="8" cy="8" r="8" fill="green" /></svg>' style='display:none'/>
 </div>
 <input type='text' name='b' maxlength='31' value=''>
-<input type='submit' value='Adicionar'>
+<input type='submit' value='SALVAR'>
 </form>
+<form action='/clone_timeout' method='POST'><input type='submit' value='CANCELAR'></form>
 )"""";

@@ -128,7 +128,8 @@ void __handle_add(AsyncWebServerRequest* request) {
     FORM_ASK_VALUE(code.rf433_length, "length");
     FORM_ASK_VALUE(code.rf433_delay, "Delay");
     FORM_END("SALVAR")
-
+    s += "<form action='/' method='POST'><input type='submit' "
+         "value='CANCELAR'></form>";
     // send add page
     request->send(200, "text/html", html_header + s + html_footer);
   }
@@ -174,7 +175,8 @@ void __handle_clone_timeout(AsyncWebServerRequest* request) {
   Serial.println("TIMEOUT...");
 #endif
   __clone_off();
-  request->send(200, "text/plain", "OK");
+  request->send(200, "text/html",
+                "<meta http-equiv='refresh' content='0; url=/'/>");
 }
 
 void init_codes_manager() {
