@@ -17,9 +17,11 @@
 #include <ESPAsyncWiFiManager.h>
 #include <ESP_EEPROM.h>
 #include <LittleFS.h>
+#include <OneButton.h>
 #include <RCSwitch.h>
 #include <Ticker.h>
 
+#include "buttons.h"
 #include "codeman.h"
 #include "datetime.h"
 #include "dump.h"

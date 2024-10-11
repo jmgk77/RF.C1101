@@ -2,7 +2,7 @@
 
 void setup() {
 #ifdef DEBUG
-  Serial.begin(115200);
+  Serial.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY, 1);
   delay(1000);
   Serial.println();
   Serial.println(String(DEFAULT_DEVICE_NAME) + " " + VERSION);
@@ -29,6 +29,8 @@ void setup() {
 
   init_led();
 
+  init_buttons();
+
   //***
 }
 
@@ -36,6 +38,8 @@ void loop() {
   handle_web();
 
   handle_codes_manager();
+
+  handle_buttons();
 
   //***
 }
