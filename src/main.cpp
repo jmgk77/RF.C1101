@@ -31,6 +31,8 @@ void setup() {
 
   init_buttons();
 
+  init_mqtt();
+
   //***
 }
 
@@ -40,6 +42,8 @@ void loop() {
   handle_codes_manager();
 
   handle_buttons();
+
+  handle_mqtt();
 
   //***
 }

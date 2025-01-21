@@ -18,6 +18,7 @@
 #include <ESP_EEPROM.h>
 #include <LittleFS.h>
 #include <OneButton.h>
+#include <PicoMQTT.h>
 #include <RCSwitch.h>
 #include <Ticker.h>
 
@@ -28,6 +29,7 @@
 #include "eeprom.h"
 #include "html.h"
 #include "led.h"
+#include "mqtt.h"
 #include "persistence.h"
 #include "rf433.h"
 #include "version.h"
