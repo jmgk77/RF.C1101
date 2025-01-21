@@ -19,7 +19,7 @@ void init_mqtt() {
   mqtt_topic_ip = String(eeprom.device_name) + "/IP";
 
   // periodic announce
-  mqtt.attach(MQTT_ANNOUNCE_TIMER, []() { mqtt_announce = true; });
+  mqtt.once_ms_scheduled(MQTT_ANNOUNCE_TIMER, []() { mqtt_announce = true; });
 }
 
 void handle_mqtt() {
