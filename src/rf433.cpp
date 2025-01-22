@@ -63,6 +63,9 @@ bool add_433(RF_CODE& code) {
     }
   }
 
+  // replace forbidden chars
+  code.rf433_name.replace(";", "_");
+
   // add to vector
   if (is_new) {
 #ifdef DEBUG
