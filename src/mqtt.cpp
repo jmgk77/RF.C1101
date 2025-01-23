@@ -7,10 +7,6 @@ bool mqtt_announce = false;
 
 String mqtt_topic_ip;
 String mqtt_topic_buttons;
-String mqtt_topic_command;
-#ifdef DEBUG
-String mqtt_topic_reply;
-#endif
 
 extern struct eeprom_data eeprom;
 extern std::vector<RF_CODE> rf433_codes;
@@ -21,13 +17,6 @@ void __callback(const char* payload) {
   if (button < rf433_codes.size()) {
     send_433_enable();
     send_433(*(rf433_codes.begin() + button));
-#ifdef DEBUG
-    mqtt_client->publish(mqtt_topic_reply, "OK");
-#endif
-  } else {
-#ifdef DEBUG
-    mqtt_client->publish(mqtt_topic_reply, "NOK");
-#endif
   }
 }
 
@@ -38,17 +27,10 @@ void init_mqtt() {
       eeprom.mqtt_server_username, eeprom.mqtt_server_password);
   mqtt_client->begin();
 
-  mqtt_topic_ip = String(eeprom.device_name) + "/IP";
-  mqtt_topic_buttons = String(eeprom.device_name) + "/ACCEPT";
-  mqtt_topic_command = String(eeprom.device_name) + "/COMMAND";
-#ifdef DEBUG
-  mqtt_topic_reply = String(eeprom.device_name) + "/STATUS";
-#endif
-
   // periodic announce
   mqtt.attach_scheduled(MQTT_ANNOUNCE_TIMER, []() { mqtt_announce = true; });
 
-  mqtt_client->subscribe(mqtt_topic_command, __callback);
+  mqtt_client->subscribe(String(eeprom.device_name) + "/COMMAND", __callback);
 }
 
 void handle_mqtt() {
@@ -58,13 +40,21 @@ void handle_mqtt() {
   // periodic publish IP
   if (mqtt_announce) {
     mqtt_announce = false;
-    mqtt_client->publish(mqtt_topic_ip, WiFi.localIP().toString());
 
+    mqtt_client->publish(
+        String(eeprom.device_name) + "/DESCRIPTION",
+        String(DEFAULT_DEVICE_NAME) + String(" ") + String(VERSION));
+
+    // send IP
+    mqtt_client->publish(String(eeprom.device_name) + "/IP",
+                         WiFi.localIP().toString());
+
+    // send rf codes accepted
     String s;
     for (auto& c : rf433_codes) {
       s += c.rf433_name;
       s += ";";
     }
-    mqtt_client->publish(mqtt_topic_buttons, s);
+    mqtt_client->publish(String(eeprom.device_name) + "/ACCEPT", s);
   }
 }
