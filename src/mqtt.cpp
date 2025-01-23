@@ -13,7 +13,12 @@ extern std::vector<RF_CODE> rf433_codes;
 
 void __callback(const char* payload) {
   unsigned int button = atoi(payload);
-  // ! check atoi() error
+
+  // check atoi() error
+  if ((button == 0) && (payload[0] != '0')) {
+    return;
+  }
+
   if (button < rf433_codes.size()) {
     send_433_enable();
     send_433(*(rf433_codes.begin() + button));
