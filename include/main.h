@@ -43,5 +43,3 @@
 // #define DEBUG
 #define ENABLE_EXTRA_DISCOVERY
 // #define ENABLE_BOGUS_CODES
-// #define WITH_BUTTONS
-// #define WITH_LEDS
