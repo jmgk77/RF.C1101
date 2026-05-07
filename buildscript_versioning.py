@@ -3,7 +3,7 @@ import subprocess
 
 FILENAME_BUILDNO = "versioning"
 FILENAME_VERSION_H = "include/version.h"
-version = "v0.0."
+version = "v0.1."
 
 
 build_no = 0
@@ -18,6 +18,8 @@ with open(FILENAME_BUILDNO, "w+") as f:
     print("Build number: {}".format(build_no))
 
 hf = """
+// GENERATED FILE - DO NOT EDIT
+
 #ifndef BUILD_NUMBER
   #define BUILD_NUMBER "{}"
 #endif
