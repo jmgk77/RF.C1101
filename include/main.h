@@ -37,10 +37,10 @@
 
 #define DEFAULT_DEVICE_NAME "RF_CC1101"
 
-#define RF433_RX_PIN 4  // D2
-#define RF433_TX_PIN 5  // D1
+#define RF433_TX_PIN 3   // RX
+#define RF433_RX_PIN 16  // D0
 
-#define BUTTON1_PIN 3  // RX
+#define BUTTON1_PIN 2  // D4
 #define BUTTON2_PIN 0  // D3
 
 #define LED_PIN LED_BUILTIN  // D4
