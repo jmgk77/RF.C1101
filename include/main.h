@@ -40,6 +40,13 @@
 #define RF433_RX_PIN 4  // D2
 #define RF433_TX_PIN 5  // D1
 
+#define BUTTON1_PIN 3  // RX
+#define BUTTON2_PIN 0  // D3
+
+#define LED_PIN LED_BUILTIN  // D4
+
 #define DEBUG
 #define ENABLE_EXTRA_DISCOVERY
 // #define ENABLE_BOGUS_CODES
+// #define ENABLE_LEDS
+// #define ENABLE_BUTTONS

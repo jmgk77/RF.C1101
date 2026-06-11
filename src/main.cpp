@@ -27,9 +27,13 @@ void setup() {
 
   init_433();
 
+#ifdef ENABLE_LEDS
   init_led();
+#endif
 
+#ifdef ENABLE_BUTTONS
   init_buttons();
+#endif
 
   init_mqtt();
 }
@@ -39,7 +43,9 @@ void loop() {
 
   handle_codes_manager();
 
+#ifdef ENABLE_BUTTONS
   handle_buttons();
+#endif
 
   handle_mqtt();
 }

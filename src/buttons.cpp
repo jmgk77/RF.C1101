@@ -28,8 +28,8 @@ void button2_press() {
 }
 
 void init_buttons() {
-  button1.setup(BUTTON1, INPUT_PULLUP, true);
-  button2.setup(BUTTON2, INPUT_PULLUP, true);
+  button1.setup(BUTTON1_PIN, INPUT_PULLUP, true);
+  button2.setup(BUTTON2_PIN, INPUT_PULLUP, true);
 
   button1.attachClick(button1_press);
   button2.attachClick(button2_press);

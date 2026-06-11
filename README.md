@@ -28,8 +28,8 @@ A professional-grade ESP8266 gateway for controlling and learning 433MHz RF sign
 
 - **Microcontroller**: ESP8266 (e.g., NodeMCU or Wemos D1 Mini).
 - **RF Module**: TI CC1101 Transceiver.
-- **Input**: 2x Tactile buttons (configured on `BUTTON1` and `BUTTON2`).
-- **Feedback**: Built-in LED for status patterns.
+- **Input**: 2x Tactile buttons (configured on `BUTTON1_PIN` and `BUTTON2_PIN`).
+- **Feedback**: Built-in LED_PIN for status patterns.
 
 ## Software Architecture
 
