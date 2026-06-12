@@ -5,7 +5,7 @@ AsyncWebServer server(80);
 AsyncWiFiManager wm(&server, &dns);
 ESPAsyncHTTPUpdateServer updateServer;
 
-extern struct eeprom_data eeprom;
+extern struct config_data config;
 extern char boot_time[32];
 
 String __add_buttons() { return String(html_buttons); }
@@ -34,7 +34,7 @@ void __handle_root(AsyncWebServerRequest* request) {
 void __handle_info(AsyncWebServerRequest* request) {
   String s;
   s += html_dump_esp8266();
-  s += html_dump_eeprom();
+  s += html_dump_config();
   s += html_dump_fs();
 
   // buttons
@@ -47,25 +47,25 @@ void __handle_config(AsyncWebServerRequest* request) {
   //
   if (request->hasParam("s", true)) {
     // read options
-    FORM_SAVE_STRING(eeprom.device_name)
-    FORM_SAVE_STRING(eeprom.mqtt_server_ip)
-    FORM_SAVE_INT(eeprom.mqtt_server_port)
-    FORM_SAVE_STRING(eeprom.mqtt_server_username)
-    FORM_SAVE_STRING(eeprom.mqtt_server_password)
-    // save data to eeprom
-    save_eeprom();
-    dump_eeprom();
+    FORM_SAVE_STRING(config.device_name)
+    FORM_SAVE_STRING(config.mqtt_server_ip)
+    FORM_SAVE_INT(config.mqtt_server_port)
+    FORM_SAVE_STRING(config.mqtt_server_username)
+    FORM_SAVE_STRING(config.mqtt_server_password)
+    // save data to config
+    save_config();
+    dump_config();
     request->send(200, "text/html",
                   "<meta http-equiv='refresh' content='0; url=/config'/>");
   } else {
     String s;
     FORM_START("/config")
-    FORM_ASK_VALUE(eeprom.device_name, "Device name")
-    FORM_ASK_VALUE(eeprom.mqtt_server_ip, "MQTT Broker fixed IP")
-    FORM_ASK_VALUE(eeprom.mqtt_server_port, "MQTT Broker Port")
+    FORM_ASK_VALUE(config.device_name, "Device name")
+    FORM_ASK_VALUE(config.mqtt_server_ip, "MQTT Broker fixed IP")
+    FORM_ASK_VALUE(config.mqtt_server_port, "MQTT Broker Port")
 
-    FORM_ASK_VALUE(eeprom.mqtt_server_username, "MQTT remote username")
-    FORM_ASK_VALUE(eeprom.mqtt_server_password, "MQTT remote password")
+    FORM_ASK_VALUE(config.mqtt_server_username, "MQTT remote username")
+    FORM_ASK_VALUE(config.mqtt_server_password, "MQTT remote password")
 
     FORM_END("SALVAR")
     // update
@@ -92,9 +92,9 @@ void __handle_reboot(AsyncWebServerRequest* request) {
 }
 
 void __handle_reset(AsyncWebServerRequest* request) {
-  // erase eeprom
-  default_eeprom();
-  save_eeprom();
+  // erase config
+  default_config();
+  save_config();
   // reset wifi
   wm.resetSettings();
   __handle_reboot(request);
@@ -192,13 +192,13 @@ void init_web() {
   WiFi.mode(WIFI_STA);
   delay(10);
   wm.setDebugOutput(false);
-  WiFi.hostname(eeprom.device_name);
+  WiFi.hostname(config.device_name);
   wm.setConfigPortalTimeout(180);
   WiFi.setAutoReconnect(true);
   WiFi.persistent(true);
 
   // captive portal
-  if (!wm.autoConnect(eeprom.device_name)) {
+  if (!wm.autoConnect(config.device_name)) {
     ESP.restart();
     delay(1 * 1000);
   }
@@ -214,6 +214,7 @@ void init_web() {
   server.on("/reboot", HTTP_ANY, __handle_reboot);
   server.on("/reset", HTTP_ANY, __handle_reset);
 
+  // www handlers for file browser
   server.on("/files", HTTP_ANY, __handle_files);
   server.on(
       "/upload", HTTP_POST,
@@ -224,12 +225,12 @@ void init_web() {
   server.begin();
 
   // discovery protocols
-  MDNS.begin(eeprom.device_name);
+  MDNS.begin(config.device_name);
   MDNS.addService("http", "tcp", 80);
 
 #ifdef ENABLE_EXTRA_DISCOVERY
-  LLMNR.begin(eeprom.device_name);
-  NBNS.begin(eeprom.device_name);
+  LLMNR.begin(config.device_name);
+  NBNS.begin(config.device_name);
 #endif
 }
 
