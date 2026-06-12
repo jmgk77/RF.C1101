@@ -8,12 +8,11 @@ void setup() {
   Serial.println(String(DEFAULT_DEVICE_NAME) + " " + VERSION);
 #endif
 
-  init_eeprom();
-  LittleFS.begin();
+  init_config();
 
 #ifdef DEBUG
   dump_esp8266();
-  dump_eeprom();
+  dump_config();
   dump_fs();
 #endif
 

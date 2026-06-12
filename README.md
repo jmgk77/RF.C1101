@@ -38,8 +38,7 @@ A professional-grade ESP8266 gateway for controlling and learning 433MHz RF sign
 - `web.cpp`: Async Web Server and WiFi Manager implementation.
 - `mqtt.cpp`: PicoMQTT client handling and topic logic.
 - `codeman.cpp`: High-level RF code management logic and web handlers.
-- `persistence.cpp`: CSV-based storage logic for RF codes.
-- `eeprom.cpp`: Structured configuration storage with integrity checks.
+- `persistence.cpp`: CSV-based storage logic for RF codes and config.
 - `led.cpp`: Non-blocking LED pattern controller using Ticker.
 
 ## Configuration

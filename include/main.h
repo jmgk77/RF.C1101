@@ -5,7 +5,7 @@
 #endif
 
 #include <Arduino.h>
-#include <CRC32.h>
+#include <ArduinoJson.h>
 #include <ELECHOUSE_CC1101_SRC_DRV.h>
 #include <ESP8266LLMNR.h>
 #include <ESP8266NetBIOS.h>
@@ -15,7 +15,6 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsyncWiFiManager.h>
-#include <ESP_EEPROM.h>
 #include <LittleFS.h>
 #include <OneButton.h>
 #include <PicoMQTT.h>
@@ -26,7 +25,6 @@
 #include "codeman.h"
 #include "datetime.h"
 #include "dump.h"
-#include "eeprom.h"
 #include "html.h"
 #include "led.h"
 #include "mqtt.h"

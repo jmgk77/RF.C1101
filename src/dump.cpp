@@ -1,6 +1,6 @@
 #include "main.h"
 
-extern struct eeprom_data eeprom;
+extern struct config_data config;
 
 extern std::vector<RF_CODE> rf433_codes;
 
@@ -30,15 +30,13 @@ const char FS_INFO[] PROGMEM =
     "FS.maxOpenFiles(): %d\n"
     "FS.maxPathLength(): %d\n\n";
 
-const char EEPROM_INFO[] PROGMEM =
-    "EEPROM\n"
-    "EEPROM.sign: %c\n"
-    "EEPROM.checksum: %08x\n"
-    "EEPROM.device_name: %s\n"
-    "EEPROM.mqtt_server_ip: %s\n"
-    "EEPROM.mqtt_server_port: %d\n"
-    "EEPROM.mqtt_server_username: %s\n"
-    "EEPROM.mqtt_server_password: %s\n\n";
+const char CONFIG_INFO[] PROGMEM =
+    "CONFIG\n"
+    "CONFIG.device_name: %s\n"
+    "CONFIG.mqtt_server_ip: %s\n"
+    "CONFIG.mqtt_server_port: %d\n"
+    "CONFIG.mqtt_server_username: %s\n"
+    "CONFIG.mqtt_server_password: %s\n\n";
 
 String __dump_esp8266() {
   char buf[1024];
@@ -62,17 +60,17 @@ String __dump_fs() {
   return String(buf);
 }
 
-String __dump_eeprom() {
+String __dump_config() {
   char buf[1024];
-  snprintf(buf, sizeof(buf), EEPROM_INFO, eeprom.sign, eeprom.checksum,
-           eeprom.device_name, eeprom.mqtt_server_ip, eeprom.mqtt_server_port,
-           eeprom.mqtt_server_username, eeprom.mqtt_server_password);
+  snprintf(buf, sizeof(buf), CONFIG_INFO, config.device_name,
+           config.mqtt_server_ip, config.mqtt_server_port,
+           config.mqtt_server_username, config.mqtt_server_password);
   return String(buf);
 }
 
 void dump_esp8266() { Serial.print(__dump_esp8266()); }
 void dump_fs() { Serial.print(__dump_fs()); }
-void dump_eeprom() { Serial.print(__dump_eeprom()); }
+void dump_config() { Serial.print(__dump_config()); }
 
 String html_dump_esp8266() {
   String s = __dump_esp8266();
@@ -86,8 +84,8 @@ String html_dump_fs() {
   return s;
 }
 
-String html_dump_eeprom() {
-  String s = __dump_eeprom();
+String html_dump_config() {
+  String s = __dump_config();
   s.replace("\n", "<br>");
   return s;
 }

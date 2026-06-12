@@ -8,7 +8,7 @@ bool mqtt_announce = false;
 String mqtt_topic_ip;
 String mqtt_topic_buttons;
 
-extern struct eeprom_data eeprom;
+extern struct config_data config;
 extern std::vector<RF_CODE> rf433_codes;
 
 void __callback(const char* payload) {
@@ -28,14 +28,14 @@ void __callback(const char* payload) {
 void init_mqtt() {
   // mqtt client
   mqtt_client = new PicoMQTT::Client(
-      eeprom.mqtt_server_ip, eeprom.mqtt_server_port, eeprom.device_name,
-      eeprom.mqtt_server_username, eeprom.mqtt_server_password);
+      config.mqtt_server_ip, config.mqtt_server_port, config.device_name,
+      config.mqtt_server_username, config.mqtt_server_password);
   mqtt_client->begin();
 
   // periodic announce
   mqtt.attach_scheduled(MQTT_ANNOUNCE_TIMER, []() { mqtt_announce = true; });
 
-  mqtt_client->subscribe(String(eeprom.device_name) + "/COMMAND", __callback);
+  mqtt_client->subscribe(String(config.device_name) + "/COMMAND", __callback);
 }
 
 void handle_mqtt() {
@@ -47,11 +47,11 @@ void handle_mqtt() {
     mqtt_announce = false;
 
     mqtt_client->publish(
-        String(eeprom.device_name) + "/DESCRIPTION",
+        String(config.device_name) + "/DESCRIPTION",
         String(DEFAULT_DEVICE_NAME) + String(" ") + String(VERSION));
 
     // send IP
-    mqtt_client->publish(String(eeprom.device_name) + "/IP",
+    mqtt_client->publish(String(config.device_name) + "/IP",
                          WiFi.localIP().toString());
 
     // send rf codes accepted
@@ -60,6 +60,6 @@ void handle_mqtt() {
       s += c.rf433_name;
       s += ";";
     }
-    mqtt_client->publish(String(eeprom.device_name) + "/ACCEPT", s);
+    mqtt_client->publish(String(config.device_name) + "/ACCEPT", s);
   }
 }
