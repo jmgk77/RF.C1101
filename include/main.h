@@ -25,6 +25,7 @@
 #include "codeman.h"
 #include "datetime.h"
 #include "dump.h"
+#include "favicon.h"
 #include "html.h"
 #include "led.h"
 #include "mqtt.h"

@@ -221,6 +221,25 @@ void init_web() {
       [](AsyncWebServerRequest* request) { request->send(200); },
       __handle_upload);
 
+  // www handlers for favicon and manifest
+  server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest* request) {
+    AsyncWebServerResponse* response = request->beginResponse_P(
+        200, "image/x-icon", favicon_ico_gz, favicon_ico_gz_len);
+    response->addHeader("Content-Encoding", "gzip");
+    response->addHeader("Cache-Control", "max-age=604800");  // Cache for 1 week
+    request->send(response);
+  });
+
+  server.on("/manifest.json", HTTP_GET, [](AsyncWebServerRequest* request) {
+    // Minimal manifest for Android "Add to Home Screen" support
+    request->send(
+        200, "application/json",
+        "{\"short_name\":\"RF\",\"name\":\"RF "
+        "Control\",\"start_url\":\"/"
+        "\",\"display\":\"standalone\",\"icons\":[{\"src\":\"/"
+        "favicon.ico\",\"sizes\":\"192x192\",\"type\":\"image/x-icon\"}]}");
+  });
+
   updateServer.setup(&server, "/update");
   server.begin();
 

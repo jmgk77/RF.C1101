@@ -41,6 +41,10 @@ const char html_header[] = R""""(
 <!DOCTYPE html>
 <html lang='pt-br'>
 <head>
+<link rel="icon" type="image/png" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.ico">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#333333">
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta http-equiv='cache-control' content='no-cache, no-store, must-revalidate'>
