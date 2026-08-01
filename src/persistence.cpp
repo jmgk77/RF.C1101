@@ -5,9 +5,7 @@ extern std::vector<RF_CODE> rf433_codes;
 struct config_data config;
 
 void load_rf_codes() {
-#ifdef DEBUG
-  Serial.print("LOAD CODES ");
-#endif
+  log_printf("LOAD CODES ");
   char buffer[256];
   char buffer2[32];
   RF_CODE c;
@@ -27,11 +25,9 @@ void load_rf_codes() {
       rf433_codes.push_back(c);
     }
     file.close();
-#ifdef DEBUG
-    Serial.println(rf433_codes.size());
+    log_printf("%d\n", rf433_codes.size());
   } else {
-    Serial.println("NOK");
-#endif
+    log_println("NOK (file not found)");
   }
 }
 
@@ -81,11 +77,14 @@ void save_config() {
 }
 
 void init_config() {
-#ifdef DEBUG
-  Serial.print("CONFIG ");
-#endif
+  log_printf("CONFIG ");
 
-  LittleFS.begin();
+  bool fs_ok = LittleFS.begin();
+  if (!fs_ok) {
+    log_println("FS MOUNT FAILED! Mounting default config.");
+    default_config();
+    return;
+  }
 
   // load config
   if (LittleFS.exists(CONFIG_FILE_NAME)) {
@@ -96,9 +95,7 @@ void init_config() {
       DeserializationError error = deserializeJson(doc, file);
       if (error) {
         default_config();
-#ifdef DEBUG
-        Serial.println("NOK");
-#endif
+        log_println("NOK (Deserialization error)");
       } else {
         strlcpy(config.device_name, doc["device_name"] | DEFAULT_DEVICE_NAME,
                 sizeof(config.device_name));
@@ -109,17 +106,13 @@ void init_config() {
                 sizeof(config.mqtt_server_username));
         strlcpy(config.mqtt_server_password, doc["mqtt_server_password"] | "",
                 sizeof(config.mqtt_server_password));
-#ifdef DEBUG
-        Serial.println("OK");
-#endif
+        log_println("OK");
       }
       file.close();
     }
   } else {
     // if there's valid config file, load it
     default_config();
-#ifdef DEBUG
-    Serial.println("NOK");
-#endif
+    log_println("NOK (file not found, using default)");
   }
 }

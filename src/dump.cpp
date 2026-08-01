@@ -68,9 +68,9 @@ String __dump_config() {
   return String(buf);
 }
 
-void dump_esp8266() { Serial.print(__dump_esp8266()); }
-void dump_fs() { Serial.print(__dump_fs()); }
-void dump_config() { Serial.print(__dump_config()); }
+void dump_esp8266() { log_printf("%s", __dump_esp8266().c_str()); }
+void dump_fs() { log_printf("%s", __dump_fs().c_str()); }
+void dump_config() { log_printf("%s", __dump_config().c_str()); }
 
 String html_dump_esp8266() {
   String s = __dump_esp8266();
@@ -91,10 +91,10 @@ String html_dump_config() {
 }
 
 void dump_rf_codes() {
-  Serial.println("RF_CODES");
+  log_println("RF_CODES");
   for (auto& i : rf433_codes) {
-    Serial.printf("# %s [%ld], %d, %d, %d\n", i.rf433_name.c_str(),
-                  i.rf433_code, i.rf433_length, i.rf433_protocol,
-                  i.rf433_delay);
+    log_printf("# %s [%ld], %d, %d, %d\n", i.rf433_name.c_str(),
+               i.rf433_code, i.rf433_length, i.rf433_protocol,
+               i.rf433_delay);
   }
 }

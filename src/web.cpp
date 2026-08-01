@@ -43,6 +43,37 @@ void __handle_info(AsyncWebServerRequest* request) {
   request->send(200, "text/html", html_header + s + html_footer);
 }
 
+void __handle_logs(AsyncWebServerRequest* request) {
+  if (request->hasParam("clear")) {
+    clear_logs();
+    request->redirect("/logs");
+    return;
+  }
+  if (request->hasParam("raw")) {
+    request->send(200, "text/plain", get_all_logs());
+    return;
+  }
+
+  String s;
+  s += "<h3>System Logs</h3>\n";
+  s += "<div>\n";
+  s += "<form action='/logs' method='GET' style='display:inline;'><input type='submit' value='REFRESH'></form> ";
+  s += "<form action='/logs' method='GET' style='display:inline;'><input type='hidden' name='clear' value='1'><input type='submit' value='CLEAR LOGS'></form> ";
+  s += "<a href='/files?n=system.log'><button type='button'>DOWNLOAD SYSTEM.LOG</button></a>\n";
+  s += "</div><br>\n";
+
+  String logs = get_all_logs();
+  logs.replace("<", "&lt;");
+  logs.replace(">", "&gt;");
+
+  s += "<pre style='background:#222; color:#0f0; padding:10px; border-radius:5px; max-height:500px; overflow:auto; text-align:left; font-family:monospace;'>";
+  s += logs;
+  s += "</pre><br>\n";
+
+  s += __add_buttons();
+  request->send(200, "text/html", html_header + s + html_footer);
+}
+
 void __handle_config(AsyncWebServerRequest* request) {
   //
   if (request->hasParam("s", true)) {
@@ -199,18 +230,18 @@ void init_web() {
 
   // captive portal
   if (!wm.autoConnect(config.device_name)) {
+    log_println("WiFi AutoConnect failed! Restarting...");
     ESP.restart();
     delay(1 * 1000);
   }
-#ifdef DEBUG
-  Serial.println("Got IP: " + WiFi.localIP().toString());
-#endif
+  log_printf("Got IP: %s\n", WiFi.localIP().toString().c_str());
 
   // install www handlers
   server.onNotFound(__handle_404);
   server.on("/", HTTP_ANY, __handle_root);
   server.on("/config", HTTP_ANY, __handle_config);
   server.on("/info", HTTP_ANY, __handle_info);
+  server.on("/logs", HTTP_ANY, __handle_logs);
   server.on("/reboot", HTTP_ANY, __handle_reboot);
   server.on("/reset", HTTP_ANY, __handle_reset);
 

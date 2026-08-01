@@ -39,8 +39,15 @@ String gen_html_codes() {
 void __handle_send(AsyncWebServerRequest* request) {
   if (request->hasParam("b")) {
     int button = request->getParam("b")->value().toInt();
-    send_433_enable();
-    send_433(*(rf433_codes.begin() + button));
+    if (button >= 0 && (size_t)button < rf433_codes.size()) {
+      log_printf("Web requested SEND button #%d (%s)\n", button, rf433_codes[button].rf433_name.c_str());
+      send_433_enable();
+      send_433(*(rf433_codes.begin() + button));
+    } else {
+      log_printf("Web requested SEND button #%d OUT OF RANGE (total: %d)\n", button, (int)rf433_codes.size());
+    }
+  } else {
+    log_println("Web requested SEND but missing parameter 'b'");
   }
   request->send(200, "text/html",
                 "<meta http-equiv='refresh' content='0; url=/'/>");

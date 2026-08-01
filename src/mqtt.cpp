@@ -26,6 +26,8 @@ void __callback(const char* payload) {
 }
 
 void init_mqtt() {
+  log_printf("INIT MQTT -> Broker: %s:%d (Client ID: %s)\n",
+             config.mqtt_server_ip, config.mqtt_server_port, config.device_name);
   // mqtt client
   mqtt_client = new PicoMQTT::Client(
       config.mqtt_server_ip, config.mqtt_server_port, config.device_name,
@@ -36,6 +38,7 @@ void init_mqtt() {
   mqtt.attach_scheduled(MQTT_ANNOUNCE_TIMER, []() { mqtt_announce = true; });
 
   mqtt_client->subscribe(String(config.device_name) + "/COMMAND", __callback);
+  log_printf("MQTT subscribed to %s/COMMAND\n", config.device_name);
 }
 
 void handle_mqtt() {

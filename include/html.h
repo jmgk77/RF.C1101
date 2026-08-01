@@ -61,6 +61,7 @@ const char html_footer[] = R""""(
 const char html_buttons[] = R""""(
 <form action='/' method='POST'><input type='submit' value='MAIN'></form>
 <form action='/info' method='POST'><input type='submit' value='INFO'></form>
+<form action='/logs' method='POST'><input type='submit' value='LOGS'></form>
 <form action='/files' method='POST'><input type='submit' value='FILES'></form>
 <form action='/config' method='POST'><input type='submit' value='CONFIG'></form>
 <form action='/reboot' method='POST'><input type='submit' value='REBOOT'></form>

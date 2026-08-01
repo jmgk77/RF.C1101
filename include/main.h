@@ -28,6 +28,7 @@
 #include "favicon.h"
 #include "html.h"
 #include "led.h"
+#include "logger.h"
 #include "mqtt.h"
 #include "persistence.h"
 #include "rf433.h"
