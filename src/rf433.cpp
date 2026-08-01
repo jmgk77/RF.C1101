@@ -4,14 +4,43 @@ std::vector<RF_CODE> rf433_codes;
 
 RCSwitch rf433 = RCSwitch();
 
+// Robust TX enable: polls MARCSTATE to confirm IDLE before entering TX.
+// Necessary when 433MHz interference keeps the CC1101 busy in RX state.
+static bool __cc1101_force_tx() {
+  const int MAX_RETRIES = 10;
+  for (int i = 0; i < MAX_RETRIES; i++) {
+    // Strobe IDLE
+    ELECHOUSE_cc1101.SpiStrobe(CC1101_SIDLE);
+    delay(2);
+    byte marc = ELECHOUSE_cc1101.SpiReadStatus(CC1101_MARCSTATE) & 0x1F;
+    if (marc == 0x01) {
+      // IDLE confirmed — flush RX FIFO to clear any received data/noise
+      ELECHOUSE_cc1101.SpiStrobe(CC1101_SFRX);
+      delay(2);
+      // Now go to TX
+      ELECHOUSE_cc1101.SpiStrobe(CC1101_STX);
+      delay(15);  // PLL lock time
+      marc = ELECHOUSE_cc1101.SpiReadStatus(CC1101_MARCSTATE) & 0x1F;
+      log_printf("CC1101 MARCSTATE: 0x%02X (%s) after %d retries\n",
+                 marc, marc == 0x13 ? "TX_OK" : "ERR", i + 1);
+      return (marc == 0x13);
+    }
+    // Not IDLE yet (0x0F=RX_RST, 0x0D=RX, etc.) — loop and retry
+    log_printf("CC1101 waiting for IDLE (got 0x%02X), retry %d...\n", marc, i + 1);
+  }
+  log_println("CC1101 FATAL: Could not enter TX after 10 retries!");
+  return false;
+}
+
 void recv_433_enable() {
   ELECHOUSE_cc1101.SetRx();
   delay(5);
+  rf433.enableReceive(RF433_RX_PIN);  // Re-enable RX interrupt
 }
 
 void send_433_enable() {
-  ELECHOUSE_cc1101.SetTx();
-  delay(15);  // Allow CC1101 PLL frequency synthesizer to stabilize and lock
+  rf433.disableReceive();   // Disable RX interrupt FIRST to avoid conflict
+  __cc1101_force_tx();
 }
 
 void init_433() {
@@ -40,9 +69,11 @@ void init_433() {
     log_println("CC1101 status: NOK (Check SPI/Wiring!)");
   }
 
+  // Start in RX mode
+  ELECHOUSE_cc1101.SetRx();
   rf433.enableReceive(RF433_RX_PIN);
   rf433.enableTransmit(RF433_TX_PIN);
-  rf433.setRepeatTransmit(15);  // Increase default repeat count from 10 to 15
+  rf433.setRepeatTransmit(15);
   log_printf("RF433 pins: RX=%d, TX=%d (15 Repeats, Max PA)\n", RF433_RX_PIN, RF433_TX_PIN);
 }
 
