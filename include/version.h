@@ -2,11 +2,11 @@
 // GENERATED FILE - DO NOT EDIT
 
 #ifndef BUILD_NUMBER
-  #define BUILD_NUMBER "559"
+  #define BUILD_NUMBER "567"
 #endif
 #ifndef VERSION
-  #define VERSION "v0.1.559 - 2026-08-01 13:45:40 [b9f46f6|main]"
+  #define VERSION "v0.1.567 - 2026-08-03 16:48:17 [e23863d|main]"
 #endif
 #ifndef VERSION_SHORT
-  #define VERSION_SHORT "v0.1.559"
+  #define VERSION_SHORT "v0.1.567"
 #endif

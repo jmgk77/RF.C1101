@@ -40,11 +40,13 @@ void __handle_send(AsyncWebServerRequest* request) {
   if (request->hasParam("b")) {
     int button = request->getParam("b")->value().toInt();
     if (button >= 0 && (size_t)button < rf433_codes.size()) {
-      log_printf("Web requested SEND button #%d (%s)\n", button, rf433_codes[button].rf433_name.c_str());
+      log_printf("Web requested SEND button #%d (%s)\n", button,
+                 rf433_codes[button].rf433_name.c_str());
       send_433_enable();
       send_433(*(rf433_codes.begin() + button));
     } else {
-      log_printf("Web requested SEND button #%d OUT OF RANGE (total: %d)\n", button, (int)rf433_codes.size());
+      log_printf("Web requested SEND button #%d OUT OF RANGE (total: %d)\n",
+                 button, (int)rf433_codes.size());
     }
   } else {
     log_println("Web requested SEND but missing parameter 'b'");
@@ -56,24 +58,36 @@ void __handle_send(AsyncWebServerRequest* request) {
 void __handle_delete(AsyncWebServerRequest* request) {
   if (request->hasParam("b")) {
     int button = request->getParam("b")->value().toInt();
-    rf433_codes.erase(rf433_codes.begin() + button);
-    save_rf_codes();
+    if (button >= 0 && (size_t)button < rf433_codes.size()) {
+      rf433_codes.erase(rf433_codes.begin() + button);
+      save_rf_codes();
+    } else {
+      log_printf("Web requested DELETE button #%d OUT OF RANGE (total: %d)\n",
+                 button, (int)rf433_codes.size());
+    }
   }
   request->send(200, "text/html",
                 "<meta http-equiv='refresh' content='0; url=/'/>");
 }
 
 void __handle_edit(AsyncWebServerRequest* request) {
-  int button;
+  int button = -1;
   if (request->hasParam("b")) {
-    // get
     button = request->getParam("b")->value().toInt();
   } else if (request->hasParam("b", true)) {
-    // post
     button = request->getParam("b", true)->value().toInt();
   } else {
     request->send(200, "text/html",
                   "<meta http-equiv='refresh' content='0; url=/'/>");
+    return;
+  }
+
+  if (button < 0 || (size_t)button >= rf433_codes.size()) {
+    log_printf("Web requested EDIT button #%d OUT OF RANGE (total: %d)\n",
+               button, (int)rf433_codes.size());
+    request->send(200, "text/html",
+                  "<meta http-equiv='refresh' content='0; url=/'/>");
+    return;
   }
 
   if (request->hasParam("s", true)) {

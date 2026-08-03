@@ -36,7 +36,7 @@ void save_rf_codes() {
   Serial.printf("SAVE CODES %d ", rf433_codes.size());
 #endif
   char buffer[256];
-  File file = LittleFS.open("codes.csv", "w");
+  File file = LittleFS.open(CODES_FILE_NAME, "w");
   if (file) {
     file.write("Code, Protocol, Length, Delay, Name\n");
     for (auto& c : rf433_codes) {
