@@ -12,7 +12,7 @@ String __add_buttons() { return String(html_buttons); }
 
 void __handle_root(AsyncWebServerRequest* request) {
   String s;
-  //
+  s += "<div class='rf-meta mb'>\n";
   s += "IP: <i>" + WiFi.localIP().toString() + "</i><br>\n";
   s += "Data de ínicio: <i>" + String(boot_time) + "</i><br>\n";
   // version
@@ -20,13 +20,15 @@ void __handle_root(AsyncWebServerRequest* request) {
 #ifdef DEBUG
        "<FONT color=red><b> DEBUG</b></FONT>" +
 #endif
-       "<br><br>\n";
+       "<br>\n";
+  s += "</div>\n";
+  s += "<br>";
 
   //***
   s += gen_html_codes();
 
-  // buttons
-  s += __add_buttons();
+  // buttons (hidden on the phone view; layout there is buttons-only)
+  s += "<div class='rf-nav'>" + __add_buttons() + "</div>";
   // send root page
   request->send(200, "text/html", html_header + s + html_footer);
 }

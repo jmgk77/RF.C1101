@@ -50,6 +50,39 @@ const char html_header[] = R""""(
 <meta http-equiv='cache-control' content='no-cache, no-store, must-revalidate'>
 <meta http-equiv='refresh' content='600'/>
 <title>RF_CC1101</title>
+<style>
+  :root { --primary:#1a73e8; --danger:#d93025; --bg:#f5f6f7; --card:#fff; --ink:#202124; }
+  html { -webkit-text-size-adjust:100%; }
+  body { margin:0; padding:12px; background:var(--bg); color:var(--ink);
+         font:16px/1.4 system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif; }
+  .rf-title { font-size:1.1rem; color:#5f6368; font-weight:600; margin:6px 2px 10px; }
+  .rf-list { display:flex; flex-direction:column; gap:10px; }
+  .rf-row { display:flex; flex-direction:column; gap:6px; }
+  .rf-send {
+    display:flex; align-items:center; justify-content:center;
+    min-height:64px; padding:14px; border-radius:14px; background:var(--primary);
+    color:#fff; text-decoration:none; font-size:1.15rem; font-weight:600;
+    text-align:center; -webkit-user-select:none; user-select:none; cursor:pointer;
+    box-shadow:0 1px 2px rgba(0,0,0,.25); }
+  .rf-send:active { filter:brightness(.92); }
+  .rf-row > .rf-send:first-child { flex:1; }
+  .rf-admin { display:flex; gap:8px; justify-content:center; font-size:.85rem; }
+  .rf-admin a { color:#5f6368; background:#e8eaed; text-decoration:none;
+                padding:4px 12px; border-radius:8px; }
+  .rf-admin a.rf-del { color:var(--danger); background:#fce8e6; }
+  .rf-manage { display:inline-block; margin-top:14px; font-weight:600;
+               color:#5f6368; background:#e8eaed; text-decoration:none;
+               padding:10px 16px; border-radius:12px; }
+  .rf-nav { margin-top:14px; text-align:center; }
+  .rf-nav form { display:inline-block; margin:2px; }
+  @media (max-width:600px){
+    body { padding:8px; }
+    .rf-meta, .rf-nav { display:none; } /* phone sees only the repeat buttons */
+    .rf-send { min-height:56px; font-size:1.05rem; }
+    .rf-admin { display:none; }      /* edit/delete kept out of one-hand view */
+    .rf-manage { font-size:.85rem; padding:7px 12px; }
+  }
+</style>
 </head>
 <body>
 )"""";

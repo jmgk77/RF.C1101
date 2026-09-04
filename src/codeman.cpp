@@ -8,31 +8,25 @@ extern AsyncWebServer server;
 
 String gen_html_codes() {
   String s;
-  s += "<div style='border: 1px solid black'>\n<div style='border: 1px solid "
-       "black'>\n";
+  s += "<h2 class='rf-title'>Repetir Código</h2>\n";
+  s += "<div class='rf-list'>\n";
 
   int i = 0;
   for (auto& c : rf433_codes) {
-    s += "<div>";
-    s += c.rf433_name;
-
-    s += "<input type='button' value='SEND' "
-         "onclick=\"location.href='/send?b=" +
-         String(i) + "';\">";
-    s += "<input type='button' value='DELETE' "
-         "onclick=\"location.href='/delete?b=" +
-         String(i) + "';\">";
-    s += "<input type='button' value='EDIT' "
-         "onclick=\"location.href='/edit?b=" +
-         String(i) + "';\">";
-
+    s += "<div class='rf-row'>";
+    s += "<a class='rf-send' href='/send?b=" + String(i) + "'>" + c.rf433_name +
+         "</a>";
+    s += "<span class='rf-admin'><a class='rf-edit' href='/edit?b=" +
+         String(i) + "'>EDIT</a> ";
+    s += "<a class='rf-del' href='/delete?b=" + String(i) + "'>DEL</a></span>";
     s += "</div>\n";
     i++;
   }
 
-  s += "</div>\n<input type='button' value='ADD' "
-       "onclick=\"location.href='/add';\">\n<input type='button' value='CLONE' "
-       "onclick=\"location.href='/clone';\">\n</div><br>";
+  s += "</div>\n";
+  // admin are on root page so phone-only view stays clean but reachable
+  s += "<a class='rf-manage rf-add' href='/add'>+ ADD</a> ";
+  s += "<a class='rf-manage rf-clone' href='/clone'>CLONE</a>";
   return s;
 }
 
